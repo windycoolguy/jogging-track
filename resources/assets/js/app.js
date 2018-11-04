@@ -2,13 +2,9 @@ import Vue from 'vue'
 import VueCookie from 'vue-cookie'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-
-import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
-// import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.min.css';
-
-
+import Datetime from 'vue-datetime'
+import 'vue-datetime/dist/vue-datetime'
 import App from './App.vue'
-import UploadFile from './views/Auth/UploadFile.vue'
 import router from './router'
 
 Vue.use(VueCookie);
@@ -20,11 +16,11 @@ Vue.use(
       primary: '#52c2b8',
       accent: '#e95e29'
     }
-  }
-)
-// Vue.component('vue-ctk-date-time-picker', VueCtkDateTimePicker);
+  },
+);
+Vue.use(Datetime);
 Vue.component('uploadfile', require('./views/Auth/UploadFile.vue'));
-
+Vue.component('datetime', Datetime);
 Vue.component('modal', {
   template: '#modal-template'
 })

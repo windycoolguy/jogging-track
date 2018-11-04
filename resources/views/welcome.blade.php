@@ -16,12 +16,16 @@
 
     <title>Laravel Vue - Socialite</title>
     <link rel="stylesheet" type="text/css" href="{{mix('css/app.css')}}">
+    <link rel="stylesheet" type="text/css" href="./dist/umd/vue-ctk-date-time-picker.min.css">
 </head>
 <body>
 <div id="root">
 </div>
 <script type="text/javascript" src="{{mix('js/app.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/vue" charset="utf-8"></script>
+<!-- <script src="./dist/umd/vue-ctk-date-time-picker.min.js" charset="utf-8"></script> -->
+
 <!-- <script src="./dist/umd/vue-ctk-date-time-picker.min.js" charset="utf-8"></script> -->
 <!-- <script type="text/javascript">
   $(".form_datetime").datetimepicker({

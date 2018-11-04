@@ -34,6 +34,7 @@ class JoggingController extends Controller
    $jogging->end_date = $request->end_date;
    $jogging->comment = $request->comment;
   //  echo $jogging; exit;
+  //  print_r($jogging);exit;
    $jogging->save();
    return response()->json([
      'registered' => true,
@@ -44,7 +45,7 @@ class JoggingController extends Controller
  public function getall(Request $request)
  {
   $user =  $request -> user();
-  $jogging = DB::table('joggings')->where('user_id', 1)->get();
+  $jogging = DB::table('joggings')->where('user_id', $user->id)->get();
   return $jogging;
  }
 
@@ -54,8 +55,10 @@ class JoggingController extends Controller
 
  public function update(Request $request) {
    $data = Jogging::where('id', $request->id)->first ();
-   $data->name = $request->name;
-   $data->count = $request->count;
+   $data->jogging = $request->jogging;
+   $data->start_date = $request->start_date;
+   $data->end_date = $request->end_date;
+   $data->comment = $request->comment;
    $data->save();
    return $data;
  }

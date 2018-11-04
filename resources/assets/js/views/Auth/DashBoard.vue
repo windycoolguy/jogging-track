@@ -19,27 +19,28 @@
         </div>
         <div class="form-group text-left">
           <label for="comment">Comment</label>
-          <input type="text" class="form-control" id="comment" name="comment"
-            required v-model="newItem.comment" placeholder=" Enter your comment">
+          <input type="text" class="form-control" id="comment" name="comment" 
+             required v-model="newItem.comment" placeholder=" Enter your comment">
         </div>
         <button class="btn btn-primary" id="jogging" name="jogging" @click.prevent="createItem()">
           <span class="glyphicon glyphicon-plus"></span> ADD
         </button>
-        <p class="text-center alert alert-danger"
-          v-if="hasError">Please fill name!</p>
+        <div class="form-group text-left">
+          <label for="comment">Filter: </label>
+          <input type="text" class="form-control" placeholder="search" v-model="search">
+        </div>
         <p class="text-center alert alert-danger"
             v-if="hasCountError">Please enter count!</p>
-        <!-- {{ csrf_field() }} -->
         <p class="text-center alert alert-success"
           v-if="hasDeleted">Deleted Successfully!</p>
         <modal v-if="showModal" @close="showModal=false">
           <h3 slot="header">Edit Item</h3>
           <div slot="body">
             <input type="hidden" disabled class="form-control" id="e_id" name="id" required  :value="this.e_id">Jogging:
-            <input type="number" class="form-control" id="jogging" name="jogging" required  :value="this.e_jogging">Start Date:
+            <input type="text" class="form-control" id="e_jogging" name="jogging" required  :value="this.e_jogging">Start Date:
             <input type="text" class="form-control" id="e_start_date" name="start_date" required  :value="this.e_start_date">End Date:
-            <input type="number" class="form-control" id="e_end_date" name="end_date" required  :value="this.e_end_date">Comment:
-            <input type="number" class="form-control" id="comment" name="comment" required  :value="this.e_comment">
+            <input type="text" class="form-control" id="e_end_date" name="end_date" required  :value="this.e_end_date">Comment:
+            <input type="text" class="form-control" id="e_comment" name="comment" required  :value="this.e_comment">
           </div>
           <div slot="footer">
             <button class="btn btn-default" @click="showModal = false">
@@ -61,7 +62,7 @@
                 <th>Comment</th>
               </tr>
             </thead>
-            <tr v-for="item in items">
+            <tr v-for="item in computedData">
               <td>{{ item.id }}</td>
               <td>{{ item.jogging }}</td>
               <td>{{ item.start_date }}</td>
@@ -84,10 +85,21 @@
 
 <script type="text/javascript">
   import {get, post} from './../../helpers/api'
+  import { Datetime } from 'vue-datetime';
+  import Datepicker from 'vuejs-datepicker';
+
+  import Vue from 'vue';
+  Vue.use(Datetime);
   export default {
     name: 'dash-board',
+    components: {
+      datetime: Datetime,
+      Datepicker
+    },
     data: ()=> ({
       items: [],
+      search: '',
+      computedTodos: [],
       hasError: false,
       hasDeleted: false,
       hasCountError: false,
@@ -97,6 +109,7 @@
       e_start_date: '',
       e_enddate: '',
       e_comment: '',
+      result1:null,
       newItem: { 'jogging': '','start_date': '','end_date': '','comment': '' },
     }),
     mounted: function mounted() {
@@ -135,7 +148,6 @@
           this.hasError = false;
           post('/api/jogging/register', input)
           .then((response) => {
-            console.log("success!!!");
             _this.newItem = { 'jogging': '', 'start_date': '', 'end_date': '', 'comment': ''};
             _this.getVueItems();
           })
@@ -162,7 +174,7 @@
           end_date: end_date.value,
           comment: comment.value
         }
-        console.log(data);return;
+        console.log(data);
         post('/api/jogging/update', data)
         .then((response) => {
           console.log("success!");
@@ -176,7 +188,7 @@
       deleteItem: function deleteItem(item) {
         var _this = this;
         var data = {
-          id: id.value,
+          id: item.id,
         }
         post('/api/jogging/delete', data)
         .then((response) => {
@@ -189,7 +201,18 @@
           console.log("error!");
         })
       }
-    }
+    },
+    computed: {
+      computedData() { 
+        this.computedTodos = this.items;  
+        if (this.search) {
+          this.computedTodos = this.computedTodos.filter(item => item.jogging.toUpperCase().includes(this.search.toUpperCase()) || item.start_date.toUpperCase().includes(this.search.toUpperCase()) || item.end_date.toUpperCase().includes(this.search.toUpperCase()));   
+          return this.computedTodos;
+        }
+        return this.computedTodos;
+      }
+    
+    },
   }
 </script>
   <style scope>
